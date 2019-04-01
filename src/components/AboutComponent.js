@@ -13,13 +13,14 @@ function RenderLeader({ leaders }) {
 	return leaders.map(leader => {
 		return (
 			<div className="row" key={leader.id}>
-				<div className="col-12 mt-5">
+				<div className="col-12 mt-5 ">
 					<Media tag="li">
 						<Media left middle>
 							<Media object src={leader.image} alt={leader.name} />
 						</Media>
 						<Media body className="ml-5">
 							<Media heading>{leader.name}</Media>
+							<p>{leader.designation}</p>
 							<p>{leader.description}</p>
 						</Media>
 					</Media>
