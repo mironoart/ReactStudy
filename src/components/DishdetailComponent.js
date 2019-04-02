@@ -23,6 +23,41 @@ const required = val => val && val.length
 const maxLength = len => val => !val || val.length <= len
 const minLength = len => val => val && val.length >= len
 
+function RenderDish({ dish }) {
+	return (
+		<div>
+			<Card>
+				<CardImg top src={dish.image} alt={dish.name} />
+				<CardBody>
+					<CardTitle>{dish.name}</CardTitle>
+					<CardText>{dish.description}</CardText>
+				</CardBody>
+			</Card>
+		</div>
+	)
+}
+
+function RenderComments({ comments, addComment, dishId }) {
+	return (
+		<div>
+			<h4> Comments</h4>
+			<ul className="list-unstyled">
+				{comments.map((item, index) => {
+					return (
+						<li key={index}>
+							<p> {item.comment} </p>
+							<p>
+								-- {item.author},{new Date(item.date).toString().replace(/GMT.*/g, '')}
+							</p>
+						</li>
+					)
+				})}
+			</ul>
+			<CommentForm dishId={dishId} addComment={addComment} />
+		</div>
+	)
+}
+
 class CommentForm extends React.Component {
 	constructor(props) {
 		super(props)
@@ -37,9 +72,12 @@ class CommentForm extends React.Component {
 		})
 	}
 	handleSubmit = values => {
-		console.log('Current State is: ' + JSON.stringify(values))
-		alert('Current State is: ' + JSON.stringify(values))
-		// event.preventDefault();
+		this.props.addComment(
+			this.props.dishId,
+			values.rating,
+			values.author,
+			values.comment
+		)
 	}
 
 	render() {
@@ -67,9 +105,9 @@ class CommentForm extends React.Component {
 								<Col>
 									<Label htmlFor="yourname">Your Name</Label>
 									<Control.text
-										model=".yourname"
-										id="yourname"
-										name="yourname"
+										model=".author"
+										id="author"
+										name="author"
 										placeholder="Your Name"
 										className="form-control"
 										validators={{
@@ -80,7 +118,7 @@ class CommentForm extends React.Component {
 									/>
 									<Errors
 										className="text-danger"
-										model=".yourname"
+										model=".author"
 										show="touched"
 										messages={{
 											required: 'Required',
@@ -128,41 +166,6 @@ class CommentForm extends React.Component {
 	}
 }
 
-function RenderDish({ dish }) {
-	return (
-		<div>
-			<Card>
-				<CardImg top src={dish.image} alt={dish.name} />
-				<CardBody>
-					<CardTitle>{dish.name}</CardTitle>
-					<CardText>{dish.description}</CardText>
-				</CardBody>
-			</Card>
-		</div>
-	)
-}
-
-function RenderComments({ comments }) {
-	return (
-		<div>
-			<h4> Comments</h4>
-			<ul className="list-unstyled">
-				{comments.map((item, index) => {
-					return (
-						<li key={index}>
-							<p> {item.comment} </p>
-							<p>
-								-- {item.author},{new Date(item.date).toString().replace(/GMT.*/g, '')}
-							</p>
-						</li>
-					)
-				})}
-			</ul>
-			<CommentForm />
-		</div>
-	)
-}
-
 const DishDetail = props => {
 	const dish = props.dish
 	if (dish)
@@ -185,7 +188,11 @@ const DishDetail = props => {
 						<RenderDish dish={props.dish} />
 					</div>
 					<div className="col-12 col-md-5 m-1">
-						<RenderComments comments={props.comments} />
+						<RenderComments
+							comments={props.comments}
+							addComment={props.addComment}
+							dishId={props.dish.id}
+						/>
 					</div>
 				</div>
 			</div>
