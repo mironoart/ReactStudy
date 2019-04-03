@@ -28,8 +28,8 @@ function RenderDish({ dish }) {
 	return (
 		<div>
 			<Card>
-				<CardImg top src={baseUrl + dish.image} alt={dish.name} />		
-					<CardBody>
+				<CardImg top src={baseUrl + dish.image} alt={dish.name} />
+				<CardBody>
 					<CardTitle>{dish.name}</CardTitle>
 					<CardText>{dish.description}</CardText>
 				</CardBody>
@@ -38,7 +38,7 @@ function RenderDish({ dish }) {
 	)
 }
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
 	return (
 		<div>
 			<h4> Comments</h4>
@@ -48,13 +48,13 @@ function RenderComments({ comments, addComment, dishId }) {
 						<li key={index}>
 							<p> {item.comment} </p>
 							<p>
-								-- {item.author},{new Date(item.date).toString().replace(/GMT.*/g, '')}
+								-- {item.author}, {new Date(item.date).toString().replace(/GMT.*/g, '')}
 							</p>
 						</li>
 					)
 				})}
 			</ul>
-			<CommentForm dishId={dishId} addComment={addComment} />
+			<CommentForm dishId={dishId} postComment={postComment} />
 		</div>
 	)
 }
@@ -73,7 +73,7 @@ class CommentForm extends React.Component {
 		})
 	}
 	handleSubmit = values => {
-		this.props.addComment(
+		this.props.postComment(
 			this.props.dishId,
 			values.rating,
 			values.author,
@@ -206,7 +206,7 @@ const DishDetail = props => {
 					<div className="col-12 col-md-5 m-1">
 						<RenderComments
 							comments={props.comments}
-							addComment={props.addComment}
+							postComment={props.postComment}
 							dishId={props.dish.id}
 						/>
 					</div>
