@@ -54,11 +54,11 @@ function RenderComments({ comments, postComment, dishId }) {
 				<Stagger in>
 					{comments.map((item, index) => {
 						return (
-							<Fade in>
-								<li key={index}>
+							<Fade in key={index}>
+								<li>
 									<p> {item.comment} </p>
 									<p>
-										-- {item.author},{' '}
+										-- {item.author},
 										{new Date(item.date).toString().replace(/GMT.*/g, '')}
 									</p>
 								</li>

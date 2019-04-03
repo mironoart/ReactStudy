@@ -8,29 +8,48 @@ import {
 	Media
 } from 'reactstrap'
 import { Link } from 'react-router-dom'
+import { baseUrl } from '../shared/baseUrl'
+import { Loading } from './LoadingComponent'
+import { Fade, Stagger } from 'react-animation-components'
 
-function RenderLeader({ leaders }) {
-	return leaders.map(leader => {
+function RenderLeader({ leaders, isLoading, errMess }) {
+	if (isLoading) {
+		return <Loading />
+	} else if (errMess) {
+		return <h4>{errMess}</h4>
+	} else
 		return (
-			<div className="row" key={leader.id}>
-				<div className="col-12 mt-5 ">
-					<Media tag="li">
-						<Media left middle>
-							<Media object src={leader.image} alt={leader.name} />
-						</Media>
-						<Media body className="ml-5">
-							<Media heading>{leader.name}</Media>
-							<p>{leader.designation}</p>
-							<p>{leader.description}</p>
-						</Media>
-					</Media>
-				</div>
+			<div>
+				{leaders.map(leader => {
+					return (
+						<Fade in key={leader.id}>
+							<div className="row">
+								<div className="col-12 mt-5 ">
+									<Media tag="li">
+										<Media left middle>
+											<Media
+												object
+												src={baseUrl + leader.image}
+												alt={baseUrl + leader.name}
+											/>
+										</Media>
+										<Media body className="ml-5">
+											<Media heading>{leader.name}</Media>
+											<p>{leader.designation}</p>
+											<p>{leader.description}</p>
+										</Media>
+									</Media>
+								</div>
+							</div>
+						</Fade>
+					)
+				})}
 			</div>
 		)
-	})
 }
 
-function About({ leaders }) {
+function About({ leaders, leaderLoading, leaderErrMess }) {
+	console.log('about', leaders)
 	return (
 		<div className="container">
 			<div className="row">
@@ -106,7 +125,13 @@ function About({ leaders }) {
 				</div>
 				<div className="col-12">
 					<Media list>
-						<RenderLeader leaders={leaders} />
+						<Stagger in>
+							<RenderLeader
+								leaders={leaders}
+								isLoading={leaderLoading}
+								errMess={leaderErrMess}
+							/>
+						</Stagger>
 					</Media>
 				</div>
 			</div>
